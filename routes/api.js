@@ -6,7 +6,7 @@ router.get('/exercise', (req, res) => {
 });
 
 router.get('/api/workouts', (req, res) => {
-  Workout.find({})
+  Workout.find()
     .sort({ date: -1 })
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -16,14 +16,14 @@ router.get('/api/workouts', (req, res) => {
     })
 });
 
-router.post('/api/workouts', ({body}, res) => {
+router.post('/api/workouts', ({ body }, res) => {
   Workout.create(body)
-  .then(dbWorkout => {
-    res.json(dbWorkout);
-  })
-  .catch(err => {
-    res.status(400).json(err);
-  })
+    .then(dbWorkout => {
+      res.json(dbWorkout);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    })
 });
 
 router.post('/api/workouts/bulk', ({ body }, res) => {
@@ -36,14 +36,20 @@ router.post('/api/workouts/bulk', ({ body }, res) => {
     })
 });
 
-router.put('/api/workouts', ({ body }, res) => {
-  Workout.updateOne(body)
-  .then(dbWorkout => {
-    res.json(dbWorkout)
-  })
-  .catch(err => {
-    res.status(400).json(err);
-  })
+router.put('/api/workouts/:id', ({ body, params }, res) => {
+  Workout.findByIdAndUpdate(params.id,
+    {
+      $set: {
+        date: Date.now,
+        exercises: [body]
+      }
+    })
+    .then(dbWorkout => {
+      res.json(dbWorkout)
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    })
 });
 
 //workouts range?????????
