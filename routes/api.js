@@ -6,7 +6,7 @@ router.get('/exercise', (req, res) => {
 });
 
 router.get('/api/workouts', (req, res) => {
-  Workout.find()
+  Workout.find({})
     .sort({ date: -1 })
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -36,14 +36,15 @@ router.post('/api/workouts/bulk', ({ body }, res) => {
     })
 });
 
-router.put('/api/workouts/:id', ({ body, params }, res) => {
-  Workout.findByIdAndUpdate(params.id,
+router.put('/api/workouts/:id', (req, res) => {
+  console.log(req.body);
+  Workout.findByIdAndUpdate(req.params.id,
     {
-      $set: {
-        date: Date.now,
-        exercises: [body]
+      $push: {
+        exercises: [req.body]
       }
-    })
+    },
+    { new: true })
     .then(dbWorkout => {
       res.json(dbWorkout)
     })
