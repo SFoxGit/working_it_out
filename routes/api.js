@@ -64,16 +64,41 @@ router.get('/api/workouts/range', (req, res) => {
       totalDuration: { $sum: "$exercises.duration" }
     }
   }])
-    // .sort({ date: -1 })
+    .sort({ day: -1 })
     .then(dbWorkout => {
-      res.json(dbWorkout);
+      const lastSeven = dbWorkout.slice(0, 7);
+      console.log(lastSeven);
+      res.json(lastSeven);
     })
     .catch(err => {
       res.status(400).json(err);
     })
 })
 
-
+// range testing of $group instead
+// Workout.aggregate([
+//   {
+//     $group: {
+//       _id: { day: "$day" },
+//       totalDuration: { $sum: "$exercises.duration" },
+//       exercises: [
+//         {
+//           type: "$type",
+//           name: "$name",
+//           duration: "$duration",
+//           weight: { $sum: "$weight" },
+//         }
+//       ]
+//     }
+//   },
+//   {
+//     $project: {
+//       _id: 0,
+//       day: "$_id.day",
+//       totalDuration: "$_id.exercises.duration",
+//     }
+//   }
+// ])
 
 
 
