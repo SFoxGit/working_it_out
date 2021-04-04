@@ -20,7 +20,6 @@ router.get('/api/workouts', (req, res) => {
 });
 
 router.post('/api/workouts', ({ body }, res) => {
-  console.log(body)
   Workout.create(body)
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -41,7 +40,6 @@ router.post('/api/workouts/bulk', ({ body }, res) => {
 });
 
 router.put('/api/workouts/:id', (req, res) => {
-  console.log(req.body);
   Workout.findByIdAndUpdate(req.params.id,
     {
       $push: {
@@ -50,7 +48,6 @@ router.put('/api/workouts/:id', (req, res) => {
     },
     { new: true })
     .then(dbWorkout => {
-      console.log(dbWorkout);
       res.json(dbWorkout)
     })
     .catch(err => {
@@ -70,7 +67,6 @@ router.get('/api/workouts/range', (req, res) => {
       function compare(a, b) {
         const dayA = a.day;
         const dayB = b.day;
-        console.log(dayA)
 
         let comparison = 0;
         if (dayA > dayB) {
