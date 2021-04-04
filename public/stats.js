@@ -25,7 +25,6 @@ function populateChart(data) {
   let durations = data.map(({ totalDuration }) => totalDuration);
   let pounds = calculateTotalWeight(data);
   let workouts = workoutNames(data);
-  console.log(workouts)
   const colors = generatePalette();
 
   let line = document.querySelector('#canvas').getContext('2d');
@@ -175,7 +174,6 @@ function populateChart(data) {
 }
 
 function calculateTotalWeight(data) {
-  console.log(data);
   let totals = [];
 
   data.forEach((workout) => {
@@ -201,7 +199,7 @@ function workoutNames(data) {
       workouts.push(exercise.name);
     });
   });
-  console.log(workouts)
+
   // return de-duplicated array with JavaScript `Set` object
   return [...new Set(workouts)];
 }

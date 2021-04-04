@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { db } = require("../models/workouts.js");
 const Workout = require("../models/workouts.js");
 
 
@@ -9,7 +10,7 @@ router.get('/api/workouts', (req, res) => {
       totalDuration: { $sum: "$exercises.duration" }
     }
   }])
-    .sort({ date: -1 })
+    .sort({ _id: 1 })
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
@@ -66,9 +67,22 @@ router.get('/api/workouts/range', (req, res) => {
   }])
     .sort({ day: -1 })
     .then(dbWorkout => {
-      const lastSeven = dbWorkout.slice(0, 7);
-      console.log(lastSeven);
-      res.json(lastSeven);
+      function compare(a, b) {
+        const dayA = a.day;
+        const dayB = b.day;
+        console.log(dayA)
+
+        let comparison = 0;
+        if (dayA > dayB) {
+          comparison = 1;
+        } else if (dayA < dayB) {
+          comparison = -1;
+        }
+        return comparison;
+      }
+      dbWorkout.length = 7;
+      dbWorkout.sort(compare)
+      res.json(dbWorkout);
     })
     .catch(err => {
       res.status(400).json(err);
